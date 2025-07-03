@@ -1,0 +1,38 @@
+name: Consulta de clima con OpenWeatherMap
+
+on:
+  workflow_dispatch:                      
+    inputs:
+      city:
+        description: "Ciudad a consultar (ej. Mexico City)"
+        required: true
+        default: "Mexico City"
+
+jobs:
+  weather:
+    runs-on: ubuntu-latest
+
+    env:
+      OPENWEATHER_API_KEY: ${{ secrets.OPENWEATHER_API_KEY }}
+      CITY: ${{ github.event.inputs.city }}
+
+    steps:
+    - name: Checkout del código
+      uses: actions/checkout@v4
+
+    - name: Configurar .NET SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Restaurar dependencias
+      run: dotnet restore ./WeatherApp/WeatherApp.csproj
+
+    - name: Ejecutar consulta de clima
+      run: dotnet run --project ./WeatherApp -- "$CITY"
+
+    - name: Publicar salida como artefacto
+      uses: actions/upload-artifact@v4
+      with:
+        name: reporte-clima
+        path: output.txt
