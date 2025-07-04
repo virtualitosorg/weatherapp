@@ -26,10 +26,10 @@ jobs:
         dotnet-version: '8.0.x'
 
     - name: Restaurar dependencias
-      run: dotnet restore ./WeatherApp/WeatherApp.csproj
+      run: dotnet restore ./weather.csproj
 
     - name: Ejecutar consulta de clima
-      run: dotnet run --project ./WeatherApp -- "$CITY"
+      run: dotnet run --project ./weather -- "$CITY"
 
     - name: Publicar salida como artefacto
       uses: actions/upload-artifact@v4
